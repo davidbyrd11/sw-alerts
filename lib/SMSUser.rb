@@ -146,8 +146,8 @@ class SMSUser
   #
   def admin_subscribe(name, phone)
     return @general_err if !self.is_admin # must be admin
+    return @numfmt_err if phone.match(/^\d{10}$/) === nil # US phone numbers only
     phone = "+1#{phone}"
-    return @numfmt_err if phone.match(/^\+1\d{10}$/) === nil # US phone numbers only
     return sprintf(@admin_subscribe_err, phone) if
       @db[@users_coll].find_one({'phone' => phone}) != nil # must not already be subscribed
     
@@ -164,8 +164,8 @@ class SMSUser
   #
   def admin_unsubscribe(phone)
     return @general_err if !self.is_admin # must be admin
-    phone = "+1#{phone}"
     return @numfmt_err if phone.match(/^\d{10}$/) === nil # US phone numbers only
+    phone = "+1#{phone}"
     return sprintf(@admin_unsubscribe_err, phone) if
       @db[@users_coll].find_one({'phone' => phone}) == nil # must be subscribed
     
