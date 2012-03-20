@@ -10,5 +10,5 @@ A **`local_settings.rb`** file is required in the root with the following global
 * `$app_sid` *Twilio app SID*
 * `$sw_alerts_number` *phone number associated with the Twilio app*
 * `$admins` *array of phone numbers who are admins*
-    
+
 Sings with [Sinatra](http://sinatrarb.com). Powered by [Twilio](http://twilio.com).
