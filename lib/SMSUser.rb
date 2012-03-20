@@ -169,7 +169,7 @@ class SMSUser
     return sprintf(@admin_unsubscribe_err, phone) if
       @db[@users_coll].find_one({'phone' => phone}) == nil # must be subscribed
     
-    @db[@users_coll].remove({'phone' => phone)
+    @db[@users_coll].remove({'phone' => phone})
     sprintf(@admin_unsubscribe_msg, phone)
   end
   
