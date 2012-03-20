@@ -8,20 +8,28 @@ require './local_settings'
 #
 class SMSUser
   
+  attr_accessor :general_err
+  
   def initialize(phone)
     
     # messages
-    @general_error = "Erg. I don't know what to do with that. Text HELP for help."
+    @general_err = "Erg. I don't know what to do with that. Text HELP for help."
     @help_msg = "Text your name to subscribe to NYU Startup Week Alerts. Text UNSUBSCRIBE to unsubscribe. \n(Powered by Twilio)"
-    @admin_help_msg = "Text B:[message] to broadcast a message. #{@help_msg}"
+    @admin_help_msg = "B:[message] to broadcast.\nS:[name],[phone] to subscribe.\nUS:[phone] to unsubscribe."
     @subscribe_msg = "Hello! You are subscribing to Startup Week Alerts as \"%s\". If your name is correct, text YES to confirm. If not, text your name again."
     @subscribe_err = "You are already subscribed to Startup Week Alerts. Text HELP for help."
+    @subscribe_numfmt_err = 'Invalid phone number format. Must be ^\+1\d{10}$'
+    @admin_subscribe_msg = "%s (%s) is now subscribed to Startup Week Alerts."
+    @admin_subscribe_err = "%s is already subscribed."
+    @admin_unsubscribe_msg = "%s has been unsubscribed."
+    @admin_unsubscribe_err = "%s is not subscribed."
     @confirm_msg = "Welcome, %s! You are now subscribed to Startup Week Alerts. Text UNSUBSCRIBE to unsubscribe."
-    @confirm_err = @general_error
+    @confirm_err = @general_err
     @unsubscribe_msg = "G'bye! You have unsubscribed from NYU Startup Week Alerts. Text your name to re-subscribe."
     @unsubscribe_err = "You are not subscribed. Text HELP for help."
     @broadcast_msg = "Your message has been queued. Text YES to confirm and broadcast your message to all subscribers. Text another message to replace it."
     @confirm_broadcast_msg = "Your message has been sent."
+    @confirm_broadcast_notq_err = "You have no message queued."
     # end messages
     
     @phone = phone
@@ -42,7 +50,7 @@ class SMSUser
   #
   def is_subscribed(unconfirmed=false)
     coll = unconfirmed===true ? @db[@users_uc_coll] : @db[@users_coll]
-    if coll.find_one('phone' => @phone) == nil then
+    if coll.find_one({'phone' => @phone}) == nil then
       false
     else
       true
@@ -134,10 +142,39 @@ class SMSUser
   end
   
   #
+  # allows admin to subscribe a user
+  #
+  def admin_subscribe(name, phone)
+    return @general_err if !self.is_admin # must be admin
+    return @subscribe_numfmt_err if phone.match(/^\+1\d{10}$/) === nil # US phone numbers only
+    return sprintf(@admin_subscribe_err, phone) if
+      @db[@users_coll].find_one({'phone' => phone}) != nil # must not already be subscribed
+    
+    @db[@users_coll].insert({
+      'name' => name,
+      'phone' => phone,
+      'ts' => Time.now.to_s
+    })
+    sprintf(@admin_subscribe_msg, name, phone)
+  end
+  
+  #
+  # allows admin to unsubscribe a user
+  #
+  def admin_unsubscribe(phone)
+    return @general_err if !self.is_admin # must be admin
+    return sprintf(@admin_unsubscribe_err, phone) if
+      @db[@users_coll].find_one({'phone' => phone}) == nil # must be subscribed
+    
+    @db[@users_coll].remove({'phone' => phone})
+    sprintf(@admin_unsubscribe_msg, phone)
+  end
+  
+  #
   # queues up SMS broadcast
   #
   def broadcast(msg)
-    return nil if !self.is_admin # must be admin
+    return @general_err if !self.is_admin # must be admin
     
     @db[@broadcast_queue].remove({'admin_phone' => @phone})
     @db[@broadcast_queue].insert({
@@ -152,7 +189,8 @@ class SMSUser
   # confirms and sends SMS broadcast
   #
   def confirm_broadcast
-    return nil if !self.is_admin || !self.has_broadcast_pending # must be admin and have message in queue
+    return @general_error if !self.is_admin # must be admin
+    return @confirm_broadcast_notq_err if !self.has_broadcast_pending # must have message in queue
     
     # retrieve message from queue
     broadcast = @db[@broadcast_queue].find_one({'admin_phone' => @phone})

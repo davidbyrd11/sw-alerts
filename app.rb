@@ -37,7 +37,7 @@ post %r{/sms/?} do
   # show help
   when /^help$/i
     response = user.get_help
-
+  
   # unsubscribe
   when /^unsubscribe$/i
     response = user.unsubscribe
@@ -45,7 +45,7 @@ post %r{/sms/?} do
   # confirm
   when /^yes$/i
     # broadcast (admin only)
-    if user.is_admin && user.has_broadcast_pending then
+    if user.is_admin then
       response = user.confirm_broadcast
     # subscribe
     else
@@ -54,8 +54,21 @@ post %r{/sms/?} do
     
   # broadcast message (admin only)
   when /^B:/i
-    response = user.broadcast msg[2..-1] if user.is_admin
-    
+    response = user.broadcast msg[2..-1].strip if user.is_admin
+  
+  # subscribe new user (admin only)
+  when /^S:/i
+    msg = msg[2..-1].split %r{,\s*}
+    if msg.count == 2 then
+      response = user.admin_subscribe msg[0].strip, msg[1].strip
+    else
+      response = user.general_err
+    end
+  
+  # unsubscribe user (admin only)
+  when /^US:/i
+    response = user.admin_unsubscribe msg[3..-1].strip
+
   # attempt subscribe
   else
     response = user.subscribe msg
