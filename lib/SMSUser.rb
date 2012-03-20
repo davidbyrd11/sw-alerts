@@ -30,6 +30,7 @@ class SMSUser
     @users_coll = 'users'
     @users_uc_coll = 'users_uc' # unconfirmed users queue
     @broadcast_queue = 'broadcast_queue'
+    @broadcast_archive = 'broadcast_archive'
 
     @db = Mongo::Connection.new.db(@db_name)
     #TODO verify db connection
