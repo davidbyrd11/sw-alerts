@@ -20,7 +20,7 @@ class SMSUser
     @confirm_err = @general_error
     @unsubscribe_msg = "G'bye! You have unsubscribed from NYU Startup Week Alerts. Text your name to re-subscribe."
     @unsubscribe_err = "You are not subscribed. Text HELP for help."
-    @broadcast_msg = "Your message has been queued. Text YES to confirm and broadcast your message to all subscribers."
+    @broadcast_msg = "Your message has been queued. Text YES to confirm and broadcast your message to all subscribers. Text another message to replace it."
     @confirm_broadcast_msg = "Your message has been sent."
     # end messages
     
@@ -138,6 +138,7 @@ class SMSUser
   def broadcast(msg)
     return nil if !self.is_admin # must be admin
     
+    @db[@broadcast_queue].remove({'admin_phone' => @phone})
     @db[@broadcast_queue].insert({
       'admin_phone' => @phone,
       'message' => msg,
