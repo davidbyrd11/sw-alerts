@@ -5,8 +5,6 @@ require 'mongo'
 require 'json'
 require './lib/SMSUser'
 
-bad_command_msg = "Erg. I don't know what to do with that. Text HELP for help."
-
 get '/' do
   "Stop looking at me."
 end
@@ -14,7 +12,7 @@ end
 #
 # call
 #
-get %r{/call/?} do
+post %r{/call/?} do
   headers['Content-Type'] = 'text/xml; charset=utf8'
   xmldoc = Twilio::TwiML::Response.new do |r|
     r.Say 'Welcome to Startup Week! Too get alerts, please text your name to 7 0 3, 34, T X T, S W, , Thats 7 0 3, 34, T X T, S W, , That number again is 7 0 3, 3 4 8, 9 8 7 9'
@@ -25,7 +23,7 @@ end
 #
 # sms
 #
-get %r{/sms/?} do
+post %r{/sms/?} do
   
   response = nil
   
@@ -77,5 +75,5 @@ end
 
 not_found do
   status 404
-  "um... no."
+  "negatory, good buddy."
 end
