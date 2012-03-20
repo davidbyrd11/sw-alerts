@@ -17,7 +17,7 @@ end
 get %r{/call/?} do
   headers['Content-Type'] = 'text/xml; charset=utf8'
   xmldoc = Twilio::TwiML::Response.new do |r|
-    r.Say 'Welcome to Startup Week! Too get alerts, please text your name to 7 0 3, 34, TXT, SW. Thats 7 0 3, 3 4 8, 9 8 7 9'
+    r.Say 'Welcome to Startup Week! Too get alerts, please text your name to 7 0 3, 34, T X T, S W,  Thats 7 0 3, 3 4 8, 9 8 7 9'
   end
   xmldoc.text
 end
