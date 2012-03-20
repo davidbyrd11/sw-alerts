@@ -12,7 +12,7 @@ class SMSUser
     
     # messages
     @general_error = "Erg. I don't know what to do with that. Text HELP for help."
-    @help_msg = "Text your name to subscribe to NYU Startup Week Alerts. Text UNSUBSCRIBE to unsubscribe.\n\n(Powered by Twilio)"
+    @help_msg = "Text your name to subscribe to NYU Startup Week Alerts. Text UNSUBSCRIBE to unsubscribe. \n(Powered by Twilio)"
     @subscribe_msg = "Hello! You are subscribing to Startup Week Alerts as \"%s\". If your name is correct, text YES to confirm. If not, text your name again."
     @subscribe_err = "You are already subscribed to Startup Week Alerts. Text HELP for help."
     @confirm_msg = "Welcome, %s! You are now subscribed to Startup Week Alerts. Text UNSUBSCRIBE to unsubscribe."
@@ -94,7 +94,8 @@ class SMSUser
     @db[@users_uc_coll].remove({'phone' => @phone})
     @db[@users_uc_coll].insert({
       'name' => name,
-      'phone' => @phone
+      'phone' => @phone,
+      'ts' = Time.now.to_s
     })
     sprintf(@subscribe_msg, name)
   end
@@ -109,7 +110,8 @@ class SMSUser
     user = self.get_user(@phone, true)
     @db[@users_coll].insert({
       'name' => user['name'],
-      'phone' => @phone
+      'phone' => @phone,
+      'ts' = Time.now.to_s
     })
     @db[@users_uc_coll].remove({'phone' => @phone})
     sprintf(@confirm_msg, user['name'])
@@ -133,7 +135,8 @@ class SMSUser
     
     @db[@broadcast_queue].insert({
       'admin_phone' => @phone,
-      'message' => msg
+      'message' => msg,
+      'ts' = Time.now.to_s
     })
     @broadcast_msg
   end
@@ -159,6 +162,14 @@ class SMSUser
       )
     end
     
+    # archive message
+    @db[@broadcast_archive].insert({
+      'admin_phone' => @phone,
+      'message' => msg,
+      'ts' = Time.now.to_s
+    })
+    
+    # remove from queue
     @db[@broadcast_queue].remove({'admin_phone' => @phone})
     @confirm_broadcast_msg
   end
