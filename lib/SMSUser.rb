@@ -161,12 +161,12 @@ class SMSUser
     client = Twilio::REST::Client.new $account_sid, $auth_token
     users = @db[@users_coll].find
     users.each do |user|
-      puts "SEND! #{user['name']}, #{user['phone']}" #TESTING
-      # client.account.sms.messages.create(
-      #   :from => $sw_alerts_number,
-      #   :to => user['phone'],
-      #   :body => broadcast['message']
-      # )
+      # puts "SEND! #{user['name']}, #{user['phone']}" #TESTING
+      client.account.sms.messages.create(
+        :from => $sw_alerts_number,
+        :to => user['phone'],
+        :body => broadcast['message']
+      )
     end
     
     # archive message
