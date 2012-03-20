@@ -145,7 +145,7 @@ class SMSUser
     return nil if !self.is_admin || !self.has_broadcast_pending # must be admin and have message in queue
     
     # retrieve message from queue
-    broadcast_msg = @db[@broadcast_queue].find_one({'admin_phone' => @phone})
+    broadcast = @db[@broadcast_queue].find_one({'admin_phone' => @phone})
     
     # send it
     client = Twilio::REST::Client.new $account_sid, $auth_token
@@ -155,7 +155,7 @@ class SMSUser
       client.account.sms.messages.create(
         :from => $sw_alerts_number,
         :to => user['phone'],
-        :body => broadcast_msg
+        :body => broadcast['message']
       )
     end
     
