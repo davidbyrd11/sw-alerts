@@ -12,12 +12,12 @@ class SMSUser
     
     # messages
     @general_error = "Erg. I don't know what to do with that. Text HELP for help."
-    @help_msg = "Prizes, surprises, and cupcakes! Oh, my! Text your name to subscribe to Startup Week alerts! Text UNSUBSCRIBE to unsubscribe."
-    @subscribe_msg = "Hello! You are subscribing to Startup Week alerts as \"%s\". If your name is correct, text YES to confirm. If not, text your name again."
-    @subscribe_err = "You are already subscribed to Startup Week alerts. Text HELP for help."
-    @confirm_msg = "Welcome, %s! You are now subscribed to Startup Week alerts. Text UNSUBSCRIBE to unsubscribe."
+    @help_msg = "Prizes, surprises, and cupcakes! Oh, my! Text your name to subscribe to NYU Startup Week Alerts! Text UNSUBSCRIBE to unsubscribe."
+    @subscribe_msg = "Hello! You are subscribing to Startup Week Alerts as \"%s\". If your name is correct, text YES to confirm. If not, text your name again."
+    @subscribe_err = "You are already subscribed to Startup Week Alerts. Text HELP for help."
+    @confirm_msg = "Welcome, %s! You are now subscribed to Startup Week Alerts. Text UNSUBSCRIBE to unsubscribe."
     @confirm_err = @general_error
-    @unsubscribe_msg = "G'bye! You have unsubscribed from Startup Week alerts. Text your name to re-subscribe."
+    @unsubscribe_msg = "G'bye! You have unsubscribed from NYU Startup Week Alerts. Text your name to re-subscribe."
     @unsubscribe_err = "You are not subscribed. Text HELP for help."
     @broadcast_msg = "You are about to broadcast your message to all subscribers. Text YES to confirm."
     @confirm_broadcast_msg = "Your message has been sent."
