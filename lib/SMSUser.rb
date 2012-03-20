@@ -95,7 +95,7 @@ class SMSUser
     @db[@users_uc_coll].insert({
       'name' => name,
       'phone' => @phone,
-      'ts' = Time.now.to_s
+      'ts' => Time.now.to_s
     })
     sprintf(@subscribe_msg, name)
   end
@@ -111,7 +111,7 @@ class SMSUser
     @db[@users_coll].insert({
       'name' => user['name'],
       'phone' => @phone,
-      'ts' = Time.now.to_s
+      'ts' => Time.now.to_s
     })
     @db[@users_uc_coll].remove({'phone' => @phone})
     sprintf(@confirm_msg, user['name'])
@@ -136,7 +136,7 @@ class SMSUser
     @db[@broadcast_queue].insert({
       'admin_phone' => @phone,
       'message' => msg,
-      'ts' = Time.now.to_s
+      'ts' => Time.now.to_s
     })
     @broadcast_msg
   end
@@ -166,7 +166,7 @@ class SMSUser
     @db[@broadcast_archive].insert({
       'admin_phone' => @phone,
       'message' => msg,
-      'ts' = Time.now.to_s
+      'ts' => Time.now.to_s
     })
     
     # remove from queue
