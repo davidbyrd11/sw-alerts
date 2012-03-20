@@ -13,7 +13,7 @@ class SMSUser
     # messages
     @general_error = "Erg. I don't know what to do with that. Text HELP for help."
     @help_msg = "Text your name to subscribe to NYU Startup Week Alerts. Text UNSUBSCRIBE to unsubscribe. \n(Powered by Twilio)"
-    @admin_help_msg = "Text \"B:\" followed by a message to broadcast. #{@help_msg}"
+    @admin_help_msg = "Text B:[message] to broadcast a message. #{@help_msg}"
     @subscribe_msg = "Hello! You are subscribing to Startup Week Alerts as \"%s\". If your name is correct, text YES to confirm. If not, text your name again."
     @subscribe_err = "You are already subscribed to Startup Week Alerts. Text HELP for help."
     @confirm_msg = "Welcome, %s! You are now subscribed to Startup Week Alerts. Text UNSUBSCRIBE to unsubscribe."
