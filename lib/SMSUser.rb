@@ -18,7 +18,7 @@ class SMSUser
     @admin_help_msg = "B:[message] to broadcast.\nS:[name],[phone] to subscribe.\nUS:[phone] to unsubscribe."
     @subscribe_msg = "Hello! You are subscribing to Startup Week Alerts as \"%s\". If your name is correct, text YES to confirm. If not, text your name again."
     @subscribe_err = "You are already subscribed to Startup Week Alerts. Text HELP for help."
-    @subscribe_numfmt_err = 'Invalid phone number format. Must be ^\+1\d{10}$'
+    @numfmt_err = 'Invalid phone number format. Must be ^\d{10}$'
     @admin_subscribe_msg = "%s (%s) is now subscribed to Startup Week Alerts."
     @admin_subscribe_err = "%s is already subscribed."
     @admin_unsubscribe_msg = "%s has been unsubscribed."
@@ -146,7 +146,8 @@ class SMSUser
   #
   def admin_subscribe(name, phone)
     return @general_err if !self.is_admin # must be admin
-    return @subscribe_numfmt_err if phone.match(/^\+1\d{10}$/) === nil # US phone numbers only
+    phone = "+1#{phone}"
+    return @numfmt_err if phone.match(/^\+1\d{10}$/) === nil # US phone numbers only
     return sprintf(@admin_subscribe_err, phone) if
       @db[@users_coll].find_one({'phone' => phone}) != nil # must not already be subscribed
     
@@ -163,10 +164,12 @@ class SMSUser
   #
   def admin_unsubscribe(phone)
     return @general_err if !self.is_admin # must be admin
+    phone = "+1#{phone}"
+    return @numfmt_err if phone.match(/^\d{10}$/) === nil # US phone numbers only
     return sprintf(@admin_unsubscribe_err, phone) if
       @db[@users_coll].find_one({'phone' => phone}) == nil # must be subscribed
     
-    @db[@users_coll].remove({'phone' => phone})
+    @db[@users_coll].remove({'phone' => phone)
     sprintf(@admin_unsubscribe_msg, phone)
   end
   
