@@ -56,7 +56,7 @@ post %r{/sms/?} do
     response = user.broadcast msg[2..-1].strip if user.is_admin
   
   # count subscribers (admin only)
-  when /^C:/i
+  when /^C/i
     response = user.count_subscribers
 
   # subscribe new user (admin only)
