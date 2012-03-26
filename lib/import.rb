@@ -45,8 +45,9 @@ end
 
 # add users
 if !err
-	# create admin user
+	# create admin user to add everyone
 	admin = SMSUser.new('+18582480841')
+	
 	users = list.split line_del
 	users.each do |u|
 		name,phone = u.split field_del
@@ -54,9 +55,11 @@ if !err
 		# ensure proper number format
 		phone.gsub! /[^0-9]/, ''
 		phone = phone[-10..-1]
+		
 		if phone.length == 10
 			puts admin.admin_subscribe(name, phone)
 		else
 			puts "invalid phone number (#{phone}) for #{name}"
+		end
 	end
 end
