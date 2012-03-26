@@ -54,12 +54,10 @@ if !err
 		
 		# ensure proper number format
 		phone.gsub! /[^0-9]/, ''
-		phone = phone[-10..-1]
-		
-		if phone.length == 10
-			puts admin.admin_subscribe(name, phone)
-		else
+		if phone.length != 10
 			puts "invalid phone number (#{phone}) for #{name}"
+		else
+			puts admin.admin_subscribe(name, phone)
 		end
 	end
 end
