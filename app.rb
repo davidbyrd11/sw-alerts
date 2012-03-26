@@ -55,6 +55,10 @@ post %r{/sms/?} do
   when /^B:/i
     response = user.broadcast msg[2..-1].strip if user.is_admin
   
+  # count subscribers (admin only)
+  when /^C:/i
+    response = user.count_subscribers
+
   # subscribe new user (admin only)
   when /^S:/i
     msg = msg[2..-1].split %r{,\s*}

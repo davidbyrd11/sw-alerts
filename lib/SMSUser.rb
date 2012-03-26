@@ -19,7 +19,7 @@ class SMSUser
     # messages
     @general_err = "Erg. I don't know what to do with that. Text HELP for help."
     @help_msg = "Text your name to subscribe to NYU Startup Week Alerts. Text UNSUBSCRIBE to unsubscribe. \n(Powered by Twilio)"
-    @admin_help_msg = "B:[message] to broadcast.\nS:[name],[phone] to subscribe.\nU:[phone] to unsubscribe."
+    @admin_help_msg = "B:[message] to broadcast.\nS:[name],[phone] to subscribe.\nU:[phone] to unsubscribe.\nC to count subscribers"
     @subscribe_msg = "Hello! You are subscribing to Startup Week Alerts as \"%s\". If your name is correct, text YES to confirm. If not, text your name again."
     @subscribe_err = "You are already subscribed to Startup Week Alerts. Text HELP for help."
     @numfmt_err = 'Invalid phone number format. Must be ^\d{10}$'
@@ -177,6 +177,15 @@ class SMSUser
     sprintf(@admin_unsubscribe_msg, phone)
   end
   
+  #
+  # returns the number of subscribers
+  #
+	def count_subscribers()
+		return @general_err if !self.is_admin # must be admin
+		
+		@db[@users_coll].count
+	end
+	
   #
   # queues up SMS broadcast
   #
