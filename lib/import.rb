@@ -52,8 +52,10 @@ if !err
 	users.each do |u|
 		name,phone = u.split field_del
 		
-		# ensure proper number format
+		# clean up
+		name.strip!
 		phone.gsub! /[^0-9]/, ''
+		
 		if phone.length != 10
 			puts "invalid phone number (#{phone}) for #{name}"
 		else

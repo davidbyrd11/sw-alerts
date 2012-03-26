@@ -65,8 +65,8 @@ post %r{/sms/?} do
     end
   
   # unsubscribe user (admin only)
-  when /^US:/i
-    response = user.admin_unsubscribe msg[3..-1].strip
+  when /^U:/i
+    response = user.admin_unsubscribe msg[2..-1].strip
 
   # attempt subscribe
   else
