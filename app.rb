@@ -1,8 +1,6 @@
 require 'rubygems'
 require 'sinatra'
 require 'twilio-ruby'
-#require 'bson_ext'
-require 'mongo'
 require 'json'
 require './lib/SMSUser'
 

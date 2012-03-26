@@ -1,7 +1,11 @@
 require 'rubygems'
 require 'mongo'
 require 'twilio-ruby'
-require './local_settings'
+begin
+	require './local_settings'
+rescue LoadError
+	require '../local_settings'
+end
 
 #
 # handles interaction with an SMS user
